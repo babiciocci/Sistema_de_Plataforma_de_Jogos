@@ -62,14 +62,15 @@ Para adicioná-las, basta abrir o arquivo "codeSQL.txt", copiar todo seu conteú
 
 ```mermaid
 erDiagram
+    USUARIO ||..|{ BIBLIOTECA_JOGO_USUARIO : "Possui"
+    USUARIO ||..|{ CONQUISTA_USUARIO : "Conquistou"
+    USUARIO ||..|{ AMIZADE : "Tem amizade com"
+    JOGO ||..|{ BIBLIOTECA_JOGO_USUARIO : "Pertence a"
+    JOGO ||..|{ CONQUISTA_JOGO : "Possui conquista"
+    CONQUISTA ||..|{ CONQUISTA_JOGO : "É uma conquista de"
+    CONQUISTA ||..|{ CONQUISTA_USUARIO : "É uma conquista de"
     EMPRESA ||..|{ JOGO : "Desenvolve"
-    BIBLIOTECA_JOGO_USUARIO }|..|{ USUARIO : "Possui"
-    BIBLIOTECA_JOGO_USUARIO }|..|{ JOGO : "Pertence a"
-    CONQUISTA_USUARIO }|..|{ USUARIO : "Conquistou"
-    CONQUISTA_USUARIO }|..|{ CONQUISTA : "É uma conquista de"
-    CONQUISTA_JOGO }|..|{ JOGO : "Possui conquista"
-    CONQUISTA_JOGO }|..|{ CONQUISTA : "É uma conquista de"
-    AMIZADE }|..|{ USUARIO : "Tem amizade com"
+
 
     USUARIO {
         id INT
@@ -116,5 +117,4 @@ erDiagram
         usuario1_id INT
         usuario2_id INT
     }
-
 ```
