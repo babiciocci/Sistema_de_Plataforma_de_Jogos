@@ -31,9 +31,9 @@ GROUP BY u.id;
 
 4. Liste a quantidade de jogos que cada desenvolvedor possui na plataforma.
 
-SELECT j.desenvolvedor, COUNT(j.id) AS quantidade_jogos
+SELECT j.empresa_id, COUNT(j.id) AS quantidade_jogos
 FROM jogo j
-GROUP BY j.desenvolvedor;
+GROUP BY j.empresa_id;
 
 
 
@@ -57,8 +57,7 @@ JOIN conquista_usuario cu ON u.id = cu.usuario_id
 JOIN conquista_jogo cj ON cu.conquista_id = cj.conquista_id
 JOIN jogo j ON cj.jogo_id = j.id
 GROUP BY u.id, j.id
-ORDER BY total_conquistas DESC
-LIMIT 1;
+ORDER BY total_conquistas DESC;
 
 
 
@@ -68,8 +67,7 @@ SELECT u.nome, COUNT(DISTINCT CASE WHEN a.usuario1_id != u.id THEN a.usuario1_id
 FROM usuario u
 JOIN amizade a ON u.id = a.usuario1_id OR u.id = a.usuario2_id
 GROUP BY u.id
-ORDER BY total_amigos DESC
-LIMIT 1;
+ORDER BY total_amigos DESC;
 
 
 
@@ -166,19 +164,19 @@ FROM usuario u
 JOIN biblioteca_jogo_usuario bju ON u.id = bju.usuario_id
 JOIN jogo j ON bju.jogo_id = j.id
 JOIN empresa e ON j.empresa_id = e.id
-WHERE e.nome = 'Konami'
+WHERE e.nome = 'KONAMI'
 GROUP BY u.id, u.nome;
 
 
 
 16. Quais são os jogos mais adquiridos durante o mês de novembro?
 
-SELECT j.titulo, COUNT(bju.usuario_id) AS total_adquirido
+SELECT j.titulo, MAX(bju.data_aquisicao) AS data_aquisicao
 FROM jogo j
 JOIN biblioteca_jogo_usuario bju ON j.id = bju.jogo_id
 WHERE EXTRACT(MONTH FROM bju.data_aquisicao) = 11
 GROUP BY j.id
-ORDER BY total_adquirido DESC;
+ORDER BY data_aquisicao DESC;
 
 
 
@@ -194,9 +192,14 @@ HAVING COUNT(DISTINCT bju.usuario_id) > 10;
 
 17. Qual o jogo com o maior número de conquistas e quantas conquistas ele possui?
 
-SELECT j.titulo, COUNT(cj.conquista_id) AS total_conquistas
-FROM jogo j
-JOIN conquista_jogo cj ON j.id = cj.jogo_id
-GROUP BY j.id
-ORDER BY total_conquistas DESC
-LIMIT 1;
+SELECT titulo, total_conquistas
+FROM (
+    SELECT 
+        j.titulo, 
+        COUNT(cj.conquista_id) AS total_conquistas,
+        ROW_NUMBER() OVER (ORDER BY COUNT(cj.conquista_id) DESC) AS ranking
+    FROM jogo j
+    JOIN conquista_jogo cj ON j.id = cj.jogo_id
+    GROUP BY j.id
+) AS jogos_rankeados
+WHERE ranking = 1;
