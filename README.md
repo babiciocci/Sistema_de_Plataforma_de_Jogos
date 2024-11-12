@@ -62,59 +62,59 @@ Para adicioná-las, basta abrir o arquivo "codeSQL.txt", copiar todo seu conteú
 
 ```mermaid
 erDiagram
-    USUARIO ||..|{ BIBLIOTECA_JOGO_USUARIO : "Possui"
-    USUARIO ||..|{ CONQUISTA_USUARIO : "Conquistou"
-    USUARIO ||..|{ AMIZADE : "Tem amizade com"
-    JOGO ||..|{ BIBLIOTECA_JOGO_USUARIO : "Pertence a"
-    JOGO ||..|{ CONQUISTA_JOGO : "Possui conquista"
-    CONQUISTA ||..|{ CONQUISTA_JOGO : "É uma conquista de"
-    CONQUISTA ||..|{ CONQUISTA_USUARIO : "É uma conquista de"
-    EMPRESA ||..|{ JOGO : "Desenvolve"
-
-
     USUARIO {
-        id INT
-        nome VARCHAR
-        email VARCHAR
-        data_registro DATE
+        int id PK
+        string nome
+        string email
+        date data_registro
     }
 
     JOGO {
-        id INT
-        titulo VARCHAR
-        empresa_id INT
-        data_lancamento DATE
-    }
-
-    CONQUISTA {
-        id INT
-        titulo VARCHAR
+        int id PK
+        string titulo
+        int empresa_id FK
+        date data_lancamento
     }
 
     EMPRESA {
-        id INT
-        nome VARCHAR
-        data_fundacao DATE
+        int id PK
+        string nome
+        int fundacao
+    }
+
+    CONQUISTA {
+        int id PK
     }
 
     BIBLIOTECA_JOGO_USUARIO {
-        usuario_id INT
-        jogo_id INT
-        data_aquisicao DATE
-    }
-
-    CONQUISTA_USUARIO {
-        usuario_id INT
-        conquista_id INT
+        int usuario_id FK
+        int jogo_id FK
+        date data_aquisicao
     }
 
     CONQUISTA_JOGO {
-        jogo_id INT
-        conquista_id INT
+        int jogo_id FK
+        int conquista_id FK
+    }
+
+    CONQUISTA_USUARIO {
+        int usuario_id FK
+        int conquista_id FK
+        date data_desbloqueio
     }
 
     AMIZADE {
-        usuario1_id INT
-        usuario2_id INT
+        int usuario_id FK
+        int amigo_id FK
+        date data_amizade
     }
+
+    USUARIO ||--o| AMIZADE : "tem"
+    USUARIO ||--|| BIBLIOTECA_JOGO_USUARIO : "tem"
+    USUARIO ||--o| CONQUISTA_USUARIO : "desbloqueia"
+    JOGO ||--o| BIBLIOTECA_JOGO_USUARIO : "pertence a"
+    JOGO ||--o| CONQUISTA_JOGO : "tem conquista"
+    CONQUISTA ||--o| CONQUISTA_USUARIO : "tem"
+    CONQUISTA ||--o| CONQUISTA_JOGO : "associada a"
+    EMPRESA ||--o| JOGO : "desenvolve"
 ```
