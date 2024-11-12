@@ -1,0 +1,202 @@
+1. Liste o nome de todos os jogos e suas conquistas.
+
+SELECT j.titulo AS jogo, c.titulo AS conquista
+FROM jogo j
+JOIN conquista_jogo cj ON j.id = cj.jogo_id
+JOIN conquista c ON cj.conquista_id = c.id;
+
+
+
+2. Encontre o nome de todos os usuários que têm mais de 5 amigos adicionados e liste a quantidade de amigos.
+
+SELECT 
+    u.nome,
+    COUNT(DISTINCT CASE WHEN a.usuario1_id != u.id THEN a.usuario1_id ELSE a.usuario2_id END) AS quantidade_amigos
+FROM usuario u
+JOIN amizade a ON u.id = a.usuario1_id OR u.id = a.usuario2_id
+GROUP BY u.id
+HAVING COUNT(DISTINCT CASE WHEN a.usuario1_id != u.id THEN a.usuario1_id ELSE a.usuario2_id END) > 5;
+
+
+
+
+3. Quantos jogos cada usuário possui na sua biblioteca?
+
+SELECT u.nome, COUNT(bju.jogo_id) AS jogos_na_biblioteca
+FROM usuario u
+LEFT JOIN biblioteca_jogo_usuario bju ON u.id = bju.usuario_id
+GROUP BY u.id;
+
+
+
+4. Liste a quantidade de jogos que cada desenvolvedor possui na plataforma.
+
+SELECT j.desenvolvedor, COUNT(j.id) AS quantidade_jogos
+FROM jogo j
+GROUP BY j.desenvolvedor;
+
+
+
+5. Liste todos os usuários que têm mais de 5 conquistas e os jogos que elas pertencem.
+
+SELECT u.nome, j.titulo AS jogo, COUNT(cu.conquista_id) AS total_conquistas
+FROM usuario u
+JOIN conquista_usuario cu ON u.id = cu.usuario_id
+JOIN conquista_jogo cj ON cu.conquista_id = cj.conquista_id
+JOIN jogo j ON cj.jogo_id = j.id
+GROUP BY u.id, j.id
+HAVING COUNT(cu.conquista_id) > 5;
+
+
+
+6. Quais usuários têm mais conquistas em um determinado jogo?
+
+SELECT u.nome, j.titulo AS jogo, COUNT(cu.conquista_id) AS total_conquistas
+FROM usuario u
+JOIN conquista_usuario cu ON u.id = cu.usuario_id
+JOIN conquista_jogo cj ON cu.conquista_id = cj.conquista_id
+JOIN jogo j ON cj.jogo_id = j.id
+GROUP BY u.id, j.id
+ORDER BY total_conquistas DESC
+LIMIT 1;
+
+
+
+7. Quais são os usuários com mais amigos na plataforma?
+
+SELECT u.nome, COUNT(DISTINCT CASE WHEN a.usuario1_id != u.id THEN a.usuario1_id ELSE a.usuario2_id END) AS total_amigos
+FROM usuario u
+JOIN amizade a ON u.id = a.usuario1_id OR u.id = a.usuario2_id
+GROUP BY u.id
+ORDER BY total_amigos DESC
+LIMIT 1;
+
+
+
+8. Encontre todas as empresas que não têm jogos.
+
+SELECT e.id, e.nome
+FROM empresa e
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM jogo j
+    WHERE j.empresa_id = e.id
+);
+
+
+
+9. Quais usuários conquistaram "Temos um Impostor"?
+
+SELECT u.nome
+FROM usuario u
+JOIN conquista_usuario cu ON u.id = cu.usuario_id
+JOIN conquista c ON cu.conquista_id = c.id
+WHERE c.titulo = 'Temos um Impostor';
+
+
+
+10. Liste todos os jogos lançados em 2023.
+
+SELECT j.titulo
+FROM jogo j
+WHERE EXTRACT(YEAR FROM j.data_lancamento) = 2023;
+
+
+
+11. Quais jogos foram adquiridos mais recentemente por cada usuário?
+
+SELECT 
+    u.nome AS usuario,
+    j.titulo AS jogo,
+    b.data_aquisicao
+FROM usuario u
+JOIN biblioteca_jogo_usuario b ON u.id = b.usuario_id
+JOIN jogo j ON b.jogo_id = j.id
+WHERE 
+    b.data_aquisicao = (
+        SELECT MAX(data_aquisicao)
+        FROM biblioteca_jogo_usuario
+        WHERE usuario_id = u.id
+    );
+
+
+
+12. Quais usuários não possuem amigos na plataforma?
+
+SELECT u.nome
+FROM usuario u
+LEFT JOIN amizade a ON u.id = a.usuario1_id OR u.id = a.usuario2_id
+WHERE a.usuario1_id IS NULL AND a.usuario2_id IS NULL;
+
+
+
+13. Qual é o jogo mais antigo da plataforma e qual é a data de lançamento?
+
+SELECT 
+    j.titulo AS jogo,
+    j.data_lancamento
+FROM jogo j
+WHERE j.data_lancamento = (SELECT MIN(data_lancamento) FROM jogo);
+
+
+
+
+14. Quais usuários possuem todos os jogos da desenvolvedora "Capcom"?
+
+SELECT u.id, u.nome
+FROM usuario u
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM jogo j
+    WHERE j.empresa_id = (SELECT id FROM empresa WHERE nome = 'Capcom')
+    AND NOT EXISTS (
+        SELECT 1
+        FROM biblioteca_jogo_usuario bju
+        WHERE bju.usuario_id = u.id
+        AND bju.jogo_id = j.id
+    )
+);
+
+
+
+15. Liste todos os usuários que possuem jogos da "KONAMI" e a quantidade de jogos da empresa.
+
+SELECT u.id, u.nome, COUNT(bju.jogo_id) AS quantidade_jogos_konami
+FROM usuario u
+JOIN biblioteca_jogo_usuario bju ON u.id = bju.usuario_id
+JOIN jogo j ON bju.jogo_id = j.id
+JOIN empresa e ON j.empresa_id = e.id
+WHERE e.nome = 'Konami'
+GROUP BY u.id, u.nome;
+
+
+
+16. Quais são os jogos mais adquiridos durante o mês de novembro?
+
+SELECT j.titulo, COUNT(bju.usuario_id) AS total_adquirido
+FROM jogo j
+JOIN biblioteca_jogo_usuario bju ON j.id = bju.jogo_id
+WHERE EXTRACT(MONTH FROM bju.data_aquisicao) = 11
+GROUP BY j.id
+ORDER BY total_adquirido DESC;
+
+
+
+16. Quais jogos foram adquiridos por mais de 10 usuários?
+
+SELECT j.titulo, COUNT(DISTINCT bju.usuario_id) AS quantidade_usuarios
+FROM jogo j
+JOIN biblioteca_jogo_usuario bju ON j.id = bju.jogo_id
+GROUP BY j.id
+HAVING COUNT(DISTINCT bju.usuario_id) > 10;
+
+
+
+17. Qual o jogo com o maior número de conquistas e quantas conquistas ele possui?
+
+SELECT j.titulo, COUNT(cj.conquista_id) AS total_conquistas
+FROM jogo j
+JOIN conquista_jogo cj ON j.id = cj.jogo_id
+GROUP BY j.id
+ORDER BY total_conquistas DESC
+LIMIT 1;

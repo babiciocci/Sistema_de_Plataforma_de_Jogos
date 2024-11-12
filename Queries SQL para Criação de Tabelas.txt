@@ -1,0 +1,59 @@
+CREATE TABLE usuario (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    data_registro DATE
+);
+
+CREATE TABLE jogo (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    desenvolvedor VARCHAR(255),
+    data_lancamento DATE
+);
+
+CREATE TABLE conquista (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE empresa (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    data_fundacao DATE
+);
+
+CREATE TABLE biblioteca_jogo_usuario (
+    usuario_id INTEGER NOT NULL,
+    jogo_id INTEGER NOT NULL,
+    data_aquisicao DATE,
+    PRIMARY KEY (usuario_id, jogo_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    FOREIGN KEY (jogo_id) REFERENCES jogo(id)
+);
+
+CREATE TABLE conquista_usuario (
+    usuario_id INTEGER NOT NULL,
+    conquista_id INTEGER NOT NULL,
+    jogo_id INTEGER NOT NULL,
+    PRIMARY KEY (usuario_id, conquista_id, jogo_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    FOREIGN KEY (conquista_id) REFERENCES conquista(id)
+    FOREIGN KEY (jogo_id) REFERENCES jogo(id)
+);
+
+CREATE TABLE conquista_jogo (
+    jogo_id INTEGER NOT NULL,
+    conquista_id INTEGER NOT NULL,
+    PRIMARY KEY (jogo_id, conquista_id),
+    FOREIGN KEY (jogo_id) REFERENCES jogo(id),
+    FOREIGN KEY (conquista_id) REFERENCES conquista(id)
+);
+
+CREATE TABLE amizade (
+    usuario1_id INTEGER NOT NULL,
+    usuario2_id INTEGER NOT NULL,
+    PRIMARY KEY (usuario1_id, usuario2_id),
+    FOREIGN KEY (usuario1_id) REFERENCES usuario(id),
+    FOREIGN KEY (usuario2_id) REFERENCES usuario(id)
+); 
