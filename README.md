@@ -59,3 +59,70 @@ Neste arquivo contém as Queries para adição dos dados no banco de dados.
 Para adicioná-las, basta abrir o arquivo "codeSQL.txt", copiar todo seu conteúdo e colar no terminal do SQL.
 
 ======================================================================================================================================================
+
+```mermaid
+erDiagram
+    USUARIO ||..|{ BIBLIOTECA_JOGO_USUARIO : "Possui"
+    USUARIO ||..|{ CONQUISTA_USUARIO : "Conquistou"
+    USUARIO ||..|{ AMIZADE : "Tem amizade com"
+    JOGO ||..|{ BIBLIOTECA_JOGO_USUARIO : "Pertence a"
+    JOGO ||..|{ CONQUISTA_JOGO : "Possui conquista"
+    CONQUISTA ||..|{ CONQUISTA_JOGO : "É uma conquista de"
+    CONQUISTA ||..|{ CONQUISTA_USUARIO : "É uma conquista de"
+    EMPRESA ||..|{ JOGO : "Desenvolve"
+
+    USUARIO {
+        id INT
+        nome VARCHAR
+        email VARCHAR
+        data_registro DATE
+    }
+
+    JOGO {
+        id INT
+        titulo VARCHAR
+        empresa_id INT
+        data_lancamento DATE
+    }
+
+    CONQUISTA {
+        id INT
+        titulo VARCHAR
+    }
+
+    EMPRESA {
+        id INT
+        nome VARCHAR
+        data_fundacao DATE
+    }
+
+    BIBLIOTECA_JOGO_USUARIO {
+        usuario_id INT
+        jogo_id INT
+        data_aquisicao DATE
+    }
+
+    CONQUISTA_USUARIO {
+        usuario_id INT
+        conquista_id INT
+    }
+
+    CONQUISTA_JOGO {
+        jogo_id INT
+        conquista_id INT
+    }
+
+    AMIZADE {
+        usuario1_id INT
+        usuario2_id INT
+    }
+
+    BIBLIOTECA_JOGO_USUARIO }|..|{ USUARIO : "Possui"
+    BIBLIOTECA_JOGO_USUARIO }|..|{ JOGO : "Pertence a"
+    CONQUISTA_USUARIO }|..|{ USUARIO : "Conquistou"
+    CONQUISTA_USUARIO }|..|{ CONQUISTA : "É uma conquista de"
+    CONQUISTA_JOGO }|..|{ JOGO : "Possui conquista"
+    CONQUISTA_JOGO }|..|{ CONQUISTA : "É uma conquista de"
+    AMIZADE }|..|{ USUARIO : "Tem amizade com"
+
+```
