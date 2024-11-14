@@ -84,6 +84,7 @@ erDiagram
 
     CONQUISTA {
         int id PK
+        string titulo
     }
 
     BIBLIOTECA_JOGO_USUARIO {
@@ -100,13 +101,12 @@ erDiagram
     CONQUISTA_USUARIO {
         int usuario_id FK
         int conquista_id FK
-        date data_desbloqueio
+        int jogo_id FK
     }
 
     AMIZADE {
         int usuario_id FK
-        int amigo_id FK
-        date data_amizade
+        int usuario_id FK
     }
 
     USUARIO ||--o| AMIZADE : "tem"
@@ -118,3 +118,68 @@ erDiagram
     CONQUISTA ||--o| CONQUISTA_JOGO : "associada a"
     EMPRESA ||--o| JOGO : "desenvolve"
 ```
+
+#
+
+### MODELO RELACIONAL (3FN):
+
+Com base nos atributos e relacionamentos, temos o seguinte modelo relacional:
+
+Usuário
+
+    ID_Usuario (PK)
+    Nome
+    Email
+    Data_Registro
+
+Jogo
+
+    ID_Jogo (PK)
+    Titulo
+    ID_Empresa (FK)
+    Data_Lancamento
+
+Conquista
+
+    ID_Disco (PK)
+    Titulo
+
+Empresa
+
+    ID_Empresa (PK)
+    Nome
+    Data_Fundacao
+
+Amizade
+
+    ID_Usuario (FK)
+    ID_Usuario (FK)
+
+Jogo na Biblioteca do Usuário
+
+    ID_Usuario (FK)
+    ID_Jogo (FK)
+    Data_Aquisicao
+
+Conquista do Usuário
+
+    ID_Usuario (FK)
+    ID_Conquista (FK)
+    ID_Jogo (FK)
+    Data_Desbloqueio
+
+ Conquista de Jogo
+
+    ID_Conquista (FK)
+    ID_Jogo (FK)
+    
+
+Observações sobre a normalização
+<br>
+1NF (Primeira Forma Normal): Todos os atributos devem ter valores atômicos, e as tabelas devem ter uma chave primária definida.
+<br>
+2NF (Segunda Forma Normal): Todos os atributos não-chave devem depender completamente da chave primária, não apenas de parte dela.
+<br>
+3NF (Terceira Forma Normal): Não deve haver dependências transitivas, ou seja, atributos não-chave devem depender apenas da chave primária e não de outros atributos não-chave.
+<br>
+
