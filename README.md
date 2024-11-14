@@ -87,10 +87,19 @@ erDiagram
         string titulo
     }
 
-    BIBLIOTECA_JOGO_USUARIO {
+    BIBLIOTECA_USUARIO {
+        int usuario_id FK
+    }
+
+    JOGO_USUARIO {
         int usuario_id FK
         int jogo_id FK
         date data_aquisicao
+    }
+
+    BIBLIOTECA_JOGO_USUARIO {
+        int ID_Usuario FK
+        int ID_Jogo FK
     }
 
     CONQUISTA_JOGO {
@@ -105,15 +114,19 @@ erDiagram
     }
 
     AMIZADE {
-        int usuario_id FK
-        int usuario_id FK
+        int usuario1_id FK
+        int usuario2_id FK
     }
 
     USUARIO ||--o| AMIZADE : "tem"
-    USUARIO ||--|| BIBLIOTECA_JOGO_USUARIO : "tem"
     USUARIO ||--o| CONQUISTA_USUARIO : "desbloqueia"
-    JOGO ||--o| BIBLIOTECA_JOGO_USUARIO : "pertence a"
+    USUARIO ||--o| JOGO_USUARIO : "tem"
+    USUARIO ||--o{ BIBLIOTECA_USUARIO : "pertence a"
+    USUARIO ||--o{ BIBLIOTECA_JOGO_USUARIO : "tem"
     JOGO ||--o| CONQUISTA_JOGO : "tem conquista"
+    JOGO ||--o| JOGO_USUARIO : "pertence a"
+    JOGO ||--o{ BIBLIOTECA_USUARIO : "pertence a"
+    JOGO ||--o| BIBLIOTECA_JOGO_USUARIO : "pertence a"
     CONQUISTA ||--o| CONQUISTA_USUARIO : "tem"
     CONQUISTA ||--o| CONQUISTA_JOGO : "associada a"
     EMPRESA ||--o| JOGO : "desenvolve"
@@ -155,11 +168,20 @@ Amizade
     ID_Usuario (FK)
     ID_Usuario (FK)
 
-Jogo na Biblioteca do Usuário
+Biblioteca do Usuário
+
+    ID_Usuario (FK)
+
+Jogo do Usuário
 
     ID_Usuario (FK)
     ID_Jogo (FK)
     Data_Aquisicao
+
+Jogo na Biblioteca do Usuário
+
+    ID_Usuario (FK)
+    ID_Jogo (FK)
 
 Conquista do Usuário
 
