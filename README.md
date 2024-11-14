@@ -14,7 +14,7 @@ Curso: Ciência da Computação
 <br>
 Universidade: Centro Universitário FEI
 
-======================================================================================================================================================
+#
 
 ## INFORMAÇÕES NECESSÁRIAS
 
@@ -26,7 +26,7 @@ O arquivo que contém as Queries e Questões de Álgebra Relacional criadas para
 <br>
 #### Obs: foram feitas mais de 10 perguntas.
 
-======================================================================================================================================================
+#
 
 ## CÓDIGO PARA CRIAÇÃO DE DADOS ALEATÓRIOS
 
@@ -58,79 +58,9 @@ Neste arquivo contém as Queries para adição dos dados no banco de dados.
 <br>
 Para adicioná-las, basta abrir o arquivo "codeSQL.txt", copiar todo seu conteúdo e colar no terminal do SQL.
 
-======================================================================================================================================================
+#
 
-```mermaid
-erDiagram
-    USUARIO {
-        int id PK
-        string nome
-        string email
-        date data_registro
-    }
-
-    JOGO {
-        int id PK
-        string titulo
-        int empresa_id FK
-        date data_lancamento
-    }
-
-    EMPRESA {
-        int id PK
-        string nome
-        int fundacao
-    }
-
-    CONQUISTA {
-        int id PK
-        string titulo
-    }
-
-    BIBLIOTECA_USUARIO {
-        int usuario_id FK
-    }
-
-    JOGO_USUARIO {
-        int usuario_id FK
-        int jogo_id FK
-        date data_aquisicao
-    }
-
-    BIBLIOTECA_JOGO_USUARIO {
-        int ID_Usuario FK
-        int ID_Jogo FK
-    }
-
-    CONQUISTA_JOGO {
-        int jogo_id FK
-        int conquista_id FK
-    }
-
-    CONQUISTA_USUARIO {
-        int usuario_id FK
-        int conquista_id FK
-        int jogo_id FK
-    }
-
-    AMIZADE {
-        int usuario1_id FK
-        int usuario2_id FK
-    }
-
-    USUARIO ||--o| AMIZADE : "tem"
-    USUARIO ||--o| CONQUISTA_USUARIO : "desbloqueia"
-    USUARIO ||--o| JOGO_USUARIO : "tem"
-    USUARIO ||--o{ BIBLIOTECA_USUARIO : "pertence a"
-    USUARIO ||--o{ BIBLIOTECA_JOGO_USUARIO : "tem"
-    JOGO ||--o| CONQUISTA_JOGO : "tem conquista"
-    JOGO ||--o| JOGO_USUARIO : "pertence a"
-    JOGO ||--o{ BIBLIOTECA_USUARIO : "pertence a"
-    JOGO ||--o| BIBLIOTECA_JOGO_USUARIO : "pertence a"
-    CONQUISTA ||--o| CONQUISTA_USUARIO : "tem"
-    CONQUISTA ||--o| CONQUISTA_JOGO : "associada a"
-    EMPRESA ||--o| JOGO : "desenvolve"
-```
+### MODELO ENTIDADE RELACIONAL (MER):
 
 #
 
@@ -205,3 +135,74 @@ Observações sobre a normalização
 3NF (Terceira Forma Normal): Não deve haver dependências transitivas, ou seja, atributos não-chave devem depender apenas da chave primária e não de outros atributos não-chave.
 <br>
 
+```mermaid
+erDiagram
+    USUARIO {
+        int id PK
+        string nome
+        string email
+        date data_registro
+    }
+
+    JOGO {
+        int id PK
+        string titulo
+        int empresa_id FK
+        date data_lancamento
+    }
+
+    EMPRESA {
+        int id PK
+        string nome
+        int fundacao
+    }
+
+    CONQUISTA {
+        int id PK
+        string titulo
+    }
+
+    BIBLIOTECA_USUARIO {
+        int usuario_id FK
+    }
+
+    JOGO_USUARIO {
+        int usuario_id FK
+        int jogo_id FK
+        date data_aquisicao
+    }
+
+    BIBLIOTECA_JOGO_USUARIO {
+        int ID_Usuario FK
+        int ID_Jogo FK
+    }
+
+    CONQUISTA_JOGO {
+        int jogo_id FK
+        int conquista_id FK
+    }
+
+    CONQUISTA_USUARIO {
+        int usuario_id FK
+        int conquista_id FK
+        int jogo_id FK
+    }
+
+    AMIZADE {
+        int usuario1_id FK
+        int usuario2_id FK
+    }
+
+    USUARIO ||--o| AMIZADE : "tem"
+    USUARIO ||--o| CONQUISTA_USUARIO : "desbloqueia"
+    USUARIO ||--o| JOGO_USUARIO : "tem"
+    USUARIO ||--o{ BIBLIOTECA_USUARIO : "pertence a"
+    USUARIO ||--o{ BIBLIOTECA_JOGO_USUARIO : "tem"
+    JOGO ||--o| CONQUISTA_JOGO : "tem conquista"
+    JOGO ||--o| JOGO_USUARIO : "pertence a"
+    JOGO ||--o{ BIBLIOTECA_USUARIO : "pertence a"
+    JOGO ||--o| BIBLIOTECA_JOGO_USUARIO : "pertence a"
+    CONQUISTA ||--o| CONQUISTA_USUARIO : "tem"
+    CONQUISTA ||--o| CONQUISTA_JOGO : "associada a"
+    EMPRESA ||--o| JOGO : "desenvolve"
+```
