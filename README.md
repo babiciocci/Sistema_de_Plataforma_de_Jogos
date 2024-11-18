@@ -84,7 +84,7 @@ Jogo
 
 Conquista
 
-    ID_Disco (PK)
+    ID_Conquista (PK)
     Titulo
 
 Empresa
