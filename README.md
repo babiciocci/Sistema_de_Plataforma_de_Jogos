@@ -62,6 +62,8 @@ Para adicioná-las, basta abrir o arquivo "codeSQL.txt", copiar todo seu conteú
 
 ### MODELO ENTIDADE RELACIONAL (MER):
 
+<img src="MER_Proj2.png">
+
 #
 
 ### MODELO RELACIONAL (3FN):
